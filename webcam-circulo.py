@@ -8,8 +8,8 @@ import os,sys, os.path
 import numpy as np
 
 #filtro baixo
-image_lower_hsv1 = np.array([86,64,88])
-image_upper_hsv1 = np.array([87,255,255])
+image_lower_hsv1 = np.array([76,54,78])
+image_upper_hsv1 = np.array([96,255,255])
 #filtro alto
 image_lower_hsv2 = np.array([0,93,68])
 image_upper_hsv2 = np.array([10,255,255])

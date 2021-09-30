@@ -68,7 +68,7 @@ def image_da_webcam(img):
     areas = []
     for c in contornos:
         area = cv2.contourArea(c)
-        areas.append(area)
+        areas.append(c)
         # if area > maior_area:
         #     maior_area = area
         #     maior = c

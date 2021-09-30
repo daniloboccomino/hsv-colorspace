@@ -73,9 +73,10 @@ def image_da_webcam(img):
         #     maior_area = area
         #     maior = c
     areas.sort()
-    
-    M1 = cv2.moments(areas[-1])
-    M2 = cv2.moments(areas[-2])
+    ultimo = areas[-1]
+    penultimo = areas[-2]
+    M1 = cv2.moments(ultimo)
+    M2 = cv2.moments(penultimo)
 
     # Verifica se existe alguma para calcular, se sim calcula e exibe no display
     if M1["m00"] != 0 and M1["m00"] != 0:
@@ -84,8 +85,8 @@ def image_da_webcam(img):
         dX = int(M2["m10"] / M2["m00"])
         dY = int(M2["m01"] / M2["m00"])
         
-        cv2.drawContours(contornos_img, [areas[-1]], -1, [255, 0, 0], 5)
-        cv2.drawContours(contornos_img, [areas[-2]], -1, [255, 0, 0], 5)
+        cv2.drawContours(contornos_img, [ultimo], -1, [255, 0, 0], 5)
+        cv2.drawContours(contornos_img, [penultimo], -1, [255, 0, 0], 5)
        
         #faz a cruz no centro de massa
         desenha_cruz(contornos_img, cX,cY, 20, (0,0,255))

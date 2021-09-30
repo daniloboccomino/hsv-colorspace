@@ -65,30 +65,41 @@ def image_da_webcam(img):
     
     maior = None
     maior_area = 0
+    areas = []
     for c in contornos:
         area = cv2.contourArea(c)
-        if area > maior_area:
-            maior_area = area
-            maior = c
+        areas.append(area)
+        # if area > maior_area:
+        #     maior_area = area
+        #     maior = c
+    areas.sort()
     
-    M = cv2.moments(maior)
+    M1 = cv2.moments(areas[-1])
+    M2 = cv2.moments(areas[-2])
 
     # Verifica se existe alguma para calcular, se sim calcula e exibe no display
-    if M["m00"] != 0:
-        cX = int(M["m10"] / M["m00"])
-        cY = int(M["m01"] / M["m00"])
+    if M1["m00"] != 0 and M1["m00"] != 0:
+        cX = int(M1["m10"] / M1["m00"])
+        cY = int(M1["m01"] / M1["m00"])
+        dX = int(M2["m10"] / M2["m00"])
+        dY = int(M2["m01"] / M2["m00"])
         
-        cv2.drawContours(contornos_img, [maior], -1, [255, 0, 0], 5)
+        cv2.drawContours(contornos_img, [areas[-1]], -1, [255, 0, 0], 5)
+        cv2.drawContours(contornos_img, [areas[-2]], -1, [255, 0, 0], 5)
        
         #faz a cruz no centro de massa
         desenha_cruz(contornos_img, cX,cY, 20, (0,0,255))
+        desenha_cruz(contornos_img, dX,dY, 20, (0,0,255))
 
         
         # Para escrever vamos definir uma fonte 
-        texto = cY , cX
-        origem = (0,50)
+        textoa = cY , cX
+        origem1 = (0,50)
+        texto2 = dY , dX
+        origem2 = (0,150)
  
-        escreve_texto(contornos_img, texto, origem, (0,255,0)) 
+        escreve_texto(contornos_img, texto1, origem1, (0,255,0)) 
+        escreve_texto(contornos_img, texto2, origem2, (0,255,0)) 
             
     else:
     # se não existe nada para segmentar

@@ -73,8 +73,8 @@ def image_da_webcam(img):
         #     maior_area = area
         #     maior = c
     areas.sort()
-    ultimo = areas[-1]
-    penultimo = areas[-2]
+    ultimo = areas[len(areas)-1]
+    penultimo = areas[len(areas)-2]
     M1 = cv2.moments(ultimo)
     M2 = cv2.moments(penultimo)
 

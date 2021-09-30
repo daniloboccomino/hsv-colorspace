@@ -36,15 +36,15 @@ def mascara_and(mask1, mask2):
 
 def desenha_cruz(img, cX,cY, size, color):
      """ faz a cruz no ponto cx cy"""
-     cv2.line(img,(cX - size,cY),(cX + size,cY),color,5)
-     cv2.line(img,(cX,cY - size),(cX, cY + size),color,5)    
+     cv2.line(img,(cX - size,cY),(cX + size,cY),color,3)
+     cv2.line(img,(cX,cY - size),(cX, cY + size),color,3)    
 
-def escreve_texto(img, text, origem, color):
+def escreve_texto(img, text, x, y, color):
      """ faz a cruz no ponto cx cy"""
  
      font = cv2.FONT_HERSHEY_SIMPLEX
-     origem = (0,50)
-     cv2.putText(img, str(text), origem, font,1,color,2,cv2.LINE_AA)
+     origem = (x-33,y-30)
+     cv2.putText(img, str(text), origem, font,0.4,color,1,cv2.LINE_AA)
 
 
 
@@ -63,40 +63,53 @@ def image_da_webcam(img):
     mask_rgb = cv2.cvtColor(mask_hsv, cv2.COLOR_GRAY2RGB) 
     contornos_img = mask_rgb.copy()
     
-    maior = None
+    primeiroMaior = None
     maior_area = 0
+    segundoMaior = None
+    segundoMaior_area = 0
     for c in contornos:
         area = cv2.contourArea(c)
         if area > maior_area:
+            segundoMaior_area = maior_area
             maior_area = area
-            maior = c
+            segundoMaior = primeiroMaior
+            primeiroMaior = c
+        elif area > segundoMaior_area:
+            segundoMaior_area = area
+            segundoMaior = c
     
-    M = cv2.moments(maior)
+    primeiroM = cv2.moments(primeiroMaior)
+    segundoM = cv2.moments(segundoMaior)
 
     # Verifica se existe alguma para calcular, se sim calcula e exibe no display
-    if M["m00"] != 0:
-        cX = int(M["m10"] / M["m00"])
-        cY = int(M["m01"] / M["m00"])
+    if primeiroM["m00"] != 0 and segundoM["m00"] != 0:
+        pX = int(primeiroM["m10"] / primeiroM["m00"])
+        pY = int(primeiroM["m01"] / primeiroM["m00"])
+        sX = int(segundoM["m10"] / segundoM["m00"])
+        sY = int(segundoM["m01"] / segundoM["m00"])
         
-        cv2.drawContours(contornos_img, [maior], -1, [255, 0, 0], 5)
+        cv2.drawContours(contornos_img, [primeiroMaior], -1, [255, 0, 0], 3)
+        cv2.drawContours(contornos_img, [segundoMaior], -1, [255, 0, 0], 3)
        
         #faz a cruz no centro de massa
-        desenha_cruz(contornos_img, cX,cY, 20, (0,0,255))
+        desenha_cruz(contornos_img, pX,pY, 20, (0,0,255))
+        desenha_cruz(contornos_img, sX,sY, 20, (0,0,255))
 
         
         # Para escrever vamos definir uma fonte 
-        texto = cY , cX
-        origem = (0,50)
+        textoPrimeiro = pX, pY
+        textoSegundo = sX, sY
  
-        escreve_texto(contornos_img, texto, origem, (0,255,0)) 
+        escreve_texto(contornos_img, textoPrimeiro, pX, pY, (0,0,255)) 
+        escreve_texto(contornos_img, textoSegundo, sX, sY, (0,0,255)) 
+
+        cv2.line(contornos_img,(pX,pY),(sX,sY),(0,0,255),3)
             
     else:
     # se não existe nada para segmentar
-        cX, cY = 0, 0
         # Para escrever vamos definir uma fonte 
-        texto = 'nao tem nada'
-        origem = (0,50)
-        escreve_texto(contornos_img, texto, origem, (0,0,255))
+        textoPrimeiro = 'nao tem nada'
+        escreve_texto(contornos_img, textoPrimeiro, 80, 60, (0,0,255))
     
 
 

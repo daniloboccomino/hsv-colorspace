@@ -6,6 +6,7 @@
 import cv2
 import os,sys, os.path
 import numpy as np
+import math
 
 #filtro baixo
 image_lower_hsv1 = np.array([76,54,78])
@@ -104,6 +105,11 @@ def image_da_webcam(img):
         escreve_texto(contornos_img, textoSegundo, sX, sY, (0,0,255)) 
 
         cv2.line(contornos_img,(pX,pY),(sX,sY),(0,0,255),3)
+
+        rad = math.atan2(pY-sY, pX-sY)
+        graus = round(math.degrees(rad))
+
+        escreve_texto(contornos_img, str(graus)+' graus', sX+60, sY+35, (0,0,255)) 
             
     else:
     # se não existe nada para segmentar
@@ -136,8 +142,8 @@ while rval:
 
 
 
-    cv2.imshow("preview", img)
     cv2.imshow("original", frame)
+    cv2.imshow("preview", img)
     rval, frame = vc.read()
     key = cv2.waitKey(20)
     if key == 27: # exit on ESC
